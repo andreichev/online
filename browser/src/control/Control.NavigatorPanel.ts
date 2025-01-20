@@ -58,7 +58,7 @@ class NavigatorPanel extends JSDialog.SidebarBase {
 		if (!data) return false;
 
 		if (data.type === 'treelistbox') {
-			(data as TreeWidget).draggable = false;
+			(data as TreeWidgetJSON).draggable = false;
 			return true;
 		}
 
