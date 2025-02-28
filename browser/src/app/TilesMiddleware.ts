@@ -193,6 +193,10 @@ class Tile {
 	allowFastRequest() {
 		this.updateLastRequest(undefined);
 	}
+
+	isReadyToDraw(): boolean {
+		return !!this.imgDataCache;
+	}
 }
 
 class TileManager {
