@@ -237,7 +237,7 @@ class TileManager {
 
 	//private static _debugTime: any = {}; Reserved for future.
 
-	public static tileSize: number = 256;
+	public static readonly tileSize: number = 256;
 
 	public static initialize() {
 		if (window.Worker && !(window as any).ThisIsAMobileApp) {
@@ -1224,10 +1224,8 @@ class TileManager {
 				tileWids.push(tile && tile.wireId !== undefined ? tile.wireId : 0);
 
 				const twips = new L.Point(
-					Math.floor(coords.x / this.tileSize) *
-						app.map._docLayer._tileWidthTwips,
-					Math.floor(coords.y / this.tileSize) *
-						app.map._docLayer._tileHeightTwips,
+					Math.floor(coords.x * app.pixelsToTwips),
+					Math.floor(coords.y * app.pixelsToTwips),
 				);
 
 				tilePositionsX.push(twips.x);
@@ -1259,10 +1257,10 @@ class TileManager {
 				tileWids.join(',') +
 				' ' +
 				'tilewidth=' +
-				app.map._docLayer._tileWidthTwips +
+				app.tile.size.x +
 				' ' +
 				'tileheight=' +
-				app.map._docLayer._tileHeightTwips;
+				app.tile.size.y;
 			if (hasTiles) app.socket.sendMessage(msg, '');
 			else window.app.console.log('Skipped empty (too fast) tilecombine');
 		}
@@ -1467,16 +1465,10 @@ class TileManager {
 
 	private static coordsToTileBounds(coords: TileCoordData): number[] {
 		var zoomFactor = app.map.zoomToFactor(coords.z);
-		const x =
-			(coords.x * app.map._docLayer._tileWidthTwips) /
-			this.tileSize /
-			zoomFactor;
-		const y =
-			(coords.y * app.map._docLayer._tileHeightTwips) /
-			this.tileSize /
-			zoomFactor;
-		const width = app.map._docLayer._tileWidthTwips / zoomFactor;
-		const height = app.map._docLayer._tileHeightTwips / zoomFactor;
+		const x = (coords.x * app.pixelsToTwips) / zoomFactor;
+		const y = (coords.y * app.pixelsToTwips) / zoomFactor;
+		const width = app.tile.size.x / zoomFactor;
+		const height = app.tile.size.y / zoomFactor;
 
 		return [x, y, width, height];
 	}
@@ -1591,8 +1583,8 @@ class TileManager {
 		var validTileRange = new L.Bounds(
 			new L.Point(0, 0),
 			new L.Point(
-				Math.floor((app.file.size.x - 1) / this._docLayer._tileWidthTwips),
-				Math.floor((app.file.size.y - 1) / this._docLayer._tileHeightTwips),
+				Math.floor((app.file.size.x - 1) / app.tile.size.x),
+				Math.floor((app.file.size.y - 1) / app.tile.size.y),
 			),
 		);
 
@@ -1872,10 +1864,8 @@ class TileManager {
 		if (coords.x < 0 || coords.y < 0) {
 			return false;
 		} else if (
-			(coords.x / this.tileSize) * app.map._docLayer._tileWidthTwips >
-				app.file.size.x ||
-			(coords.y / this.tileSize) * app.map._docLayer._tileHeightTwips >
-				app.file.size.y
+			coords.x * app.pixelsToTwips > app.file.size.x ||
+			coords.y * app.pixelsToTwips > app.file.size.y
 		) {
 			return false;
 		} else return true;
@@ -2127,7 +2117,7 @@ class TileManager {
 		var currZoom = Math.round(app.map.getZoom());
 		var relScale = currZoom == zoom ? 1 : app.map.getZoomScale(zoom, currZoom);
 
-		var ratio = (this.tileSize * relScale) / app.map._docLayer._tileHeightTwips;
+		var ratio = (this.tileSize * relScale) / app.tile.size.y;
 		var partHeightPixels = Math.round(
 			(app.map._docLayer._partHeightTwips +
 				app.map._docLayer._spaceBetweenParts) *
