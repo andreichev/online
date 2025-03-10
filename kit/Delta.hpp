@@ -19,7 +19,7 @@
 #include <zlib.h>
 #include <zstd.h>
 #include <stdint.h>
-#include <endian.h>
+#include <machine/endian.h>
 
 #include <Log.hpp>
 #include <Common.hpp>

@@ -5,13 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#import <UIKit/UIKit.h>
-
 #import <LibreOfficeKit/LibreOfficeKit.h>
+#import <Cocoa/Cocoa.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
+@property (weak) NSWindow* window;
 
 @end
 

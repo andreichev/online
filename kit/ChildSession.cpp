@@ -3529,19 +3529,15 @@ void ChildSession::loKitCallback(const int type, const std::string& payload)
                 {
 #if defined(IOS)
                     CODocument* document =
-                        DocumentData::get(_docManager->getMobileAppDocId()).coDocument;
+                    DocumentData::get(_docManager->getMobileAppDocId()).coDocument;
+                    [document updateChangeCount: NSChangeDone];
                     [document saveToURL:[document fileURL]
-                         forSaveOperation:UIDocumentSaveForOverwriting
-                        completionHandler:^(BOOL success) {
-                          LOG_TRC("ChildSession::loKitCallback() save completion handler gets "
-                                  << (success ? "YES" : "NO"));
-                          if (![[NSFileManager defaultManager] removeItemAtURL:document->copyFileURL
-                                                                         error:nil])
-                          {
-                              LOG_SYS("Could not remove copy of document at "
-                                      << [[document->copyFileURL path] UTF8String]);
-                          }
-                        }];
+                                 ofType:@""
+                       forSaveOperation:NSSaveOperation
+                      completionHandler:^(NSError* error) {
+                         [[NSFileManager defaultManager] removeItemAtURL:document->copyFileURL
+                                                                   error:nil];
+                     }];
 #elif defined(__ANDROID__)
                     postDirectMessage("SAVE " + payload);
 #endif

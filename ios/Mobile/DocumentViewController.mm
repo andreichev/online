@@ -31,56 +31,19 @@
 #import "Clipboard.hpp"
 
 #import "DocumentViewController.h"
+#import "MainViewController.h"
 
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import <Poco/MemoryStream.h>
 
-@interface DocumentViewController() <WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply, UIScrollViewDelegate, UIDocumentPickerDelegate, UIFontPickerViewControllerDelegate> {
+@interface DocumentViewController() <WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply> {
     int closeNotificationPipeForForwardingThread[2];
     NSURL *downloadAsTmpURL;
 }
 
 @end
 
-// From https://gist.github.com/myell0w/d8dfabde43f8da543f9c
-static BOOL isExternalKeyboardAttached()
-{
-    BOOL externalKeyboardAttached = NO;
-
-    @try {
-        NSString *keyboardClassName = [@[@"UI", @"Key", @"boa", @"rd", @"Im", @"pl"] componentsJoinedByString:@""];
-        Class c = NSClassFromString(keyboardClassName);
-        SEL sharedInstanceSEL = NSSelectorFromString(@"sharedInstance");
-        if (c == Nil || ![c respondsToSelector:sharedInstanceSEL]) {
-            return NO;
-        }
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        id sharedKeyboardInstance = [c performSelector:sharedInstanceSEL];
-#pragma clang diagnostic pop
-
-        if (![sharedKeyboardInstance isKindOfClass:NSClassFromString(keyboardClassName)]) {
-            return NO;
-        }
-
-        NSString *externalKeyboardSelectorName = [@[@"is", @"InH", @"ardw", @"areK", @"eyb", @"oard", @"Mode"] componentsJoinedByString:@""];
-        SEL externalKeyboardSEL = NSSelectorFromString(externalKeyboardSelectorName);
-        if (![sharedKeyboardInstance respondsToSelector:externalKeyboardSEL]) {
-            return NO;
-        }
-
-        externalKeyboardAttached = ((BOOL ( *)(id, SEL))objc_msgSend)(sharedKeyboardInstance, externalKeyboardSEL);
-    } @catch(__unused NSException *ex) {
-        externalKeyboardAttached = NO;
-    }
-
-    return externalKeyboardAttached;
-}
-
 @implementation DocumentViewController
-
-static IMP standardImpOfInputAccessoryView = nil;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -101,7 +64,7 @@ static IMP standardImpOfInputAccessoryView = nil;
 
     // Prevent the WebView from scrolling. Sadly I couldn't figure out how to do it in the JS,
     // so the problem is still there when using Online from Mobile Safari.
-    self.webView.scrollView.scrollEnabled = NO;
+    // self.webView.scrollView.scrollEnabled = NO;
 
     // Reenable debugging from Safari
     // The new WKWebView.inspectable property must be set to YES in order
@@ -118,7 +81,7 @@ static IMP standardImpOfInputAccessoryView = nil;
     // Prevent the user from zooming the WebView by assigning ourselves as the delegate, and
     // stopping any zoom attempt in scrollViewWillBeginZooming: below. (The zooming of the document
     // contents is handled fully in JavaScript, the WebView has no knowledge of that.)
-    self.webView.scrollView.delegate = self;
+    // self.webView.scrollView.delegate = self;
 
     [self.view addSubview:self.webView];
 
@@ -126,60 +89,6 @@ static IMP standardImpOfInputAccessoryView = nil;
     self.webView.UIDelegate = self;
 
     // Hack for tdf#129380: Don't show the "shortcut bar" if a hardware keyboard is used.
-
-    // From https://inneka.com/programming/objective-c/hide-shortcut-keyboard-bar-for-uiwebview-in-ios-9/
-    Class webBrowserClass = NSClassFromString(@"WKContentView");
-    Method method = class_getInstanceMethod(webBrowserClass, @selector(inputAccessoryView));
-
-    if (isExternalKeyboardAttached()) {
-        IMP newImp = imp_implementationWithBlock(^(id _s) {
-                if ([self.webView respondsToSelector:@selector(inputAssistantItem)]) {
-                    UITextInputAssistantItem *inputAssistantItem = [self.webView inputAssistantItem];
-                    inputAssistantItem.leadingBarButtonGroups = @[];
-                    inputAssistantItem.trailingBarButtonGroups = @[];
-                }
-                return nil;
-            });
-
-        IMP oldImp = method_setImplementation(method, newImp);
-        if (standardImpOfInputAccessoryView == nil)
-            standardImpOfInputAccessoryView = oldImp;
-    } else {
-        // If the external keyboard has been disconnected, restore the normal behaviour.
-        if (standardImpOfInputAccessoryView != nil) {
-            method_setImplementation(method, standardImpOfInputAccessoryView);
-        }
-
-        // Hack to make the on-screen keyboard pop up more eagerly when focus set to the textarea
-        // using JavaScript.
-
-        // From https://stackoverflow.com/questions/32449870/programmatically-focus-on-a-form-in-a-webview-wkwebview/32845699
-
-        static bool doneThisAlready = false;
-        if (!doneThisAlready) {
-            const char * methodSignature;
-            doneThisAlready = true;
-
-            if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion: (NSOperatingSystemVersion){13, 0, 0}]) {
-                methodSignature = "_elementDidFocus:userIsInteracting:blurPreviousNode:activityStateChanges:userObject:";
-            } else {
-                methodSignature = "_elementDidFocus:userIsInteracting:blurPreviousNode:changingActivityState:userObject:";
-            }
-
-            // Override that internal method with an own wrapper that always passes the
-            // userIsInteracting parameter as TRUE. That will cause the on-screen keyboard to pop up
-            // when we call the focus() method on the textarea element in JavaScript.
-            SEL selector = sel_getUid(methodSignature);
-            Method method = class_getInstanceMethod(webBrowserClass, selector);
-            if (method != nil) {
-                IMP original = method_getImplementation(method);
-                IMP override = imp_implementationWithBlock(^void(id me, void* arg0, BOOL arg1, BOOL arg2, BOOL arg3, id arg4) {
-                        ((void (*)(id, SEL, void*, BOOL, BOOL, BOOL, id))original)(me, selector, arg0, TRUE, arg2, arg3, arg4);
-                    });
-                method_setImplementation(method, override);
-            }
-        }
-    }
 
     WKWebView *webViewP = self.webView;
     NSDictionary *views = NSDictionaryOfVariableBindings(webViewP);
@@ -193,39 +102,36 @@ static IMP standardImpOfInputAccessoryView = nil;
                                                                         views:views]];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)viewWillAppear {
+    [super viewWillAppear];
 
     // When the user uses the camer to insert a photo, when the camera is displayed, this view is
     // removed. After the photo is taken it is then added back to the hierarchy. Our Document object
     // is still there intact, however, so no need to re-open the document when we re-appear.
 
     // Check whether the Document object is an already initialised one.
-    if (self.document->fakeClientFd >= 0)
+    if (self.document && self.document->fakeClientFd >= 0)
         return;
 
-    [self.document openWithCompletionHandler:^(BOOL success) {
-        if (success) {
-            // Display the content of the document
-        } else {
-            // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
-        }
-    }];
+    NSError* error;
+    if(![self.document loadInBrowser:error]) {
+        NSLog(@"OPENING DOCUMENT ERROR: %@", error.localizedDescription);
+    }
 }
 
 - (IBAction)dismissDocumentViewController {
-    [self dismissViewControllerAnimated:YES completion:^ {
-            [self.document closeWithCompletionHandler:^(BOOL success){
-                    LOG_TRC("close completion handler gets " << (success?"YES":"NO"));
-                    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"debug"];
-                    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"lok"];
-                    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"error"];
-                    // Don't set webView.configuration.userContentController to
-                    // nil as it generates a "nil not allowed" compiler warning
-                    [self.webView removeFromSuperview];
-                    self.webView = nil;
-                    }];
-    }];
+    NSLog(@"BYE");
+    [self.document close];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"debug"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"lok"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"error"];
+    // Don't set webView.configuration.userContentController to
+    // nil as it generates a "nil not allowed" compiler warning
+    [self.webView removeFromSuperview];
+    self.webView = nil;
+    NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
+    MainViewController *mainController = [storyBoard instantiateControllerWithIdentifier:@"MainViewController"];
+    ((NSWindowController* ) self.view.window).contentViewController = mainController;
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
@@ -321,7 +227,8 @@ static IMP standardImpOfInputAccessoryView = nil;
                 if ([uti conformsToType:UTTypePlainText]) {
                     [content setValue:outStreams[i] == NULL ? @"" : [NSString stringWithUTF8String:outStreams[i]] forKey:uti.identifier];
                 } else if (uti != nil && [uti conformsToType:UTTypeImage]) {
-                    [content setValue:[UIImage imageWithData:[NSData dataWithBytes:outStreams[i] length:outSizes[i]]] forKey:uti.identifier];
+                    NSImage* image = [[NSImage alloc] initWithData: [NSData dataWithBytes:outStreams[i] length:outSizes[i]]];
+                    [content setValue:image forKey:uti.identifier];
                 } else {
                     [content setValue:[NSData dataWithBytes:outStreams[i] length:outSizes[i]] forKey:uti.identifier];
                 }
@@ -355,7 +262,8 @@ static IMP standardImpOfInputAccessoryView = nil;
                 if ([uti conformsToType:UTTypePlainText]) {
                     [content setValue:outStreams[i] == NULL ? @"" : [NSString stringWithUTF8String:outStreams[i]] forKey:uti.identifier];
                 } else if (uti != nil && [uti conformsToType:UTTypeImage]) {
-                    [content setValue:[UIImage imageWithData:[NSData dataWithBytes:outStreams[i] length:outSizes[i]]] forKey:uti.identifier];
+                    NSImage* image = [[NSImage alloc] initWithData: [NSData dataWithBytes:outStreams[i] length:outSizes[i]]];
+                    [content setValue:image forKey:uti.identifier];
                 } else {
                     [content setValue:[NSData dataWithBytes:outStreams[i] length:outSizes[i]] forKey:uti.identifier];
                 }
@@ -372,33 +280,21 @@ static IMP standardImpOfInputAccessoryView = nil;
     return bResult;
 }
 
-- (void)setClipboardContent:(UIPasteboard *)pasteboard {
+- (void)setClipboardContent:(NSPasteboard *)pasteboard {
     NSMutableDictionary * pasteboardItems = [NSMutableDictionary new];
     
-    if (pasteboard.numberOfItems != 0) {
-        for (NSString * identifier in pasteboard.items[0])
+    if (pasteboard.pasteboardItems.count != 0) {
+        for (NSPasteboardItem * item in pasteboard.pasteboardItems)
         {
-            UTType * uti = [UTType typeWithIdentifier:identifier];
-            NSString * mime = identifier;
             
-            if (uti != nil) {
-                mime = uti.preferredMIMEType;
-            }
-            
-            if (mime == nil) {
-                LOG_WRN("UTI " << [identifier UTF8String] << " did not have associated mime type when deserializing clipboard, skipping...");
+            if (![item.types containsObject:NSPasteboardTypeString]) {
+                LOG_WRN("Pasteboard item did not have associated mime type when deserializing clipboard, skipping...");
                 continue;
             }
             
-            NSData * value = [pasteboard dataForPasteboardType:identifier];
-            
-            if (uti != nil && [pasteboardItems objectForKey:mime] != nil) {
-                // We export both mime and UTI keys, don't overwrite the mime-type ones with the UTI ones
-                continue;
-            }
-            
+            NSData * value = [item dataForType:NSPasteboardTypeString];
             if (value != nil) {
-                [pasteboardItems setObject:value forKey:mime];
+                [pasteboardItems setObject:value forKey:@"text/plain"];
             }
         }
     }
@@ -423,7 +319,7 @@ static IMP standardImpOfInputAccessoryView = nil;
 
     if ([message.name isEqualToString:@"clipboard"]) {
         if ([message.body isEqualToString:@"read"]) {
-            UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
+            NSPasteboard * pasteboard = [NSPasteboard generalPasteboard];
             
             [self setClipboardContent:pasteboard];
             
@@ -437,9 +333,8 @@ static IMP standardImpOfInputAccessoryView = nil;
                 return;
             }
             
-            UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
-
-            [pasteboard setItems:[NSArray arrayWithObject:pasteboardItem]];
+            // NSPasteboard * pasteboard = [NSPasteboard generalPasteboard];
+            // [pasteboard setItems:[NSArray arrayWithObject:pasteboardItem]];
             
             replyHandler(nil, nil);
         } else if ([message.body hasPrefix:@"sendToInternal "]) {
@@ -621,7 +516,7 @@ static IMP standardImpOfInputAccessoryView = nil;
 
             [self.slideshowWebView becomeFirstResponder];
 
-            self.slideshowWebView.contentMode = UIViewContentModeScaleAspectFit;
+            // self.slideshowWebView.contentMode = UIViewContentModeScaleAspectFit;
             self.slideshowWebView.translatesAutoresizingMaskIntoConstraints = NO;
             self.slideshowWebView.navigationDelegate = self;
             self.slideshowWebView.UIDelegate = self;
@@ -629,8 +524,6 @@ static IMP standardImpOfInputAccessoryView = nil;
             self.webView.hidden = true;
 
             [self.view addSubview:self.slideshowWebView];
-            [self.view bringSubviewToFront:self.slideshowWebView];
-
 
             WKWebView *slideshowWebViewP = self.slideshowWebView;
             NSDictionary *views = NSDictionaryOfVariableBindings(slideshowWebViewP);
@@ -661,15 +554,15 @@ static IMP standardImpOfInputAccessoryView = nil;
             std::string printFile = FileUtil::createRandomTmpDir() + "/print.pdf";
             NSURL *printURL = [NSURL fileURLWithPath:[NSString stringWithUTF8String:printFile.c_str()] isDirectory:NO];
             DocumentData::get(self.document->appDocId).loKitDocument->saveAs([[printURL absoluteString] UTF8String], "pdf", nullptr);
+            NSLog(@"IRM: Print %@", printURL.absoluteString);
+            /*
+            
+            NSPrintInfo *printInfo = [NSPrintInfo sharedPrintInfo];
+            printInfo.orientation = NSPaperOrientationPortrait; // FIXME Check the document?
+            printInfo.paperName = @"Document"; // FIXME
 
-            UIPrintInteractionController *pic = [UIPrintInteractionController sharedPrintController];
-            UIPrintInfo *printInfo = [UIPrintInfo printInfo];
-            printInfo.outputType = UIPrintInfoOutputGeneral;
-            printInfo.orientation = UIPrintInfoOrientationPortrait; // FIXME Check the document?
-            printInfo.jobName = @"Document"; // FIXME
+            NSPrintOperation* printOperation = [NSPrintOperation printOperationWithView:self.view printInfo:printInfo];
 
-            pic.printInfo = printInfo;
-            pic.printingItem = printURL;
 
             [pic presentFromRect:CGRectZero
                           inView:self.webView
@@ -678,38 +571,36 @@ static IMP standardImpOfInputAccessoryView = nil;
                     LOG_TRC("print completion handler gets " << (completed?"YES":"NO"));
                     std::remove(printFile.c_str());
                 }];
+             */
 
             return;
         } else if ([message.body isEqualToString:@"FOCUSIFHWKBD"]) {
-            if (isExternalKeyboardAttached()) {
-                NSString *hwKeyboardMagic = @"{"
-                    "    if (window.MagicToGetHWKeyboardWorking) {"
-                    "        window.MagicToGetHWKeyboardWorking();"
-                    "    }"
-                    "}";
-                [self.webView evaluateJavaScript:hwKeyboardMagic
-                               completionHandler:^(id _Nullable obj, NSError * _Nullable error)
-                     {
-                         if (error) {
-                             LOG_ERR("Error after " << [hwKeyboardMagic UTF8String] << ": " << [[error localizedDescription] UTF8String]);
-                             NSString *jsException = error.userInfo[@"WKJavaScriptExceptionMessage"];
-                             if (jsException != nil)
-                                 LOG_ERR("JavaScript exception: " << [jsException UTF8String]);
-                         }
-                     }
-                 ];
+            NSString *hwKeyboardMagic = @"{"
+            "    if (window.MagicToGetHWKeyboardWorking) {"
+            "        window.MagicToGetHWKeyboardWorking();"
+            "    }"
+            "}";
+            [self.webView evaluateJavaScript:hwKeyboardMagic
+                           completionHandler:^(id _Nullable obj, NSError * _Nullable error)
+             {
+                if (error) {
+                    LOG_ERR("Error after " << [hwKeyboardMagic UTF8String] << ": " << [[error localizedDescription] UTF8String]);
+                    NSString *jsException = error.userInfo[@"WKJavaScriptExceptionMessage"];
+                    if (jsException != nil)
+                        LOG_ERR("JavaScript exception: " << [jsException UTF8String]);
+                }
             }
-
+            ];
             return;
         } else if ([message.body hasPrefix:@"HYPERLINK"]) {
             NSArray *messageBodyItems = [message.body componentsSeparatedByString:@" "];
             if ([messageBodyItems count] >= 2) {
                 NSURL *url = [[NSURL alloc] initWithString:messageBodyItems[1]];
-                UIApplication *application = [UIApplication sharedApplication];
-                [application openURL:url options:@{} completionHandler:nil];
+                [[NSWorkspace sharedWorkspace] openURL:url];
                 return;
             }
         } else if ([message.body isEqualToString:@"FONTPICKER"]) {
+            /*
             UIFontPickerViewControllerConfiguration *configuration = [[UIFontPickerViewControllerConfiguration alloc] init];
             configuration.includeFaces = YES;
             UIFontPickerViewController *picker = [[UIFontPickerViewController alloc] initWithConfiguration:configuration];
@@ -717,6 +608,7 @@ static IMP standardImpOfInputAccessoryView = nil;
             [self presentViewController:picker
                                animated:YES
                              completion:nil];
+             */
             return;
         } else if ([message.body hasPrefix:@"downloadas "]) {
             NSArray<NSString*> *messageBodyItems = [message.body componentsSeparatedByString:@" "];
@@ -759,12 +651,14 @@ static IMP standardImpOfInputAccessoryView = nil;
                     LOG_ERR("Could apparently not save to '" <<  [[downloadAsTmpURL path] UTF8String] << "'");
                     return;
                 }
+                /*
                 UIDocumentPickerViewController *picker =
                     [[UIDocumentPickerViewController alloc] initForExportingURLs:[NSArray arrayWithObject:downloadAsTmpURL] asCopy:YES];
                 picker.delegate = self;
                 [self presentViewController:picker
                                    animated:YES
                                  completion:nil];
+                 */
                 return;
             }
         }
@@ -779,20 +673,7 @@ static IMP standardImpOfInputAccessoryView = nil;
     }
 }
 
-- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
-    std::remove([[downloadAsTmpURL path] UTF8String]);
-    std::remove([[[downloadAsTmpURL URLByDeletingLastPathComponent] path] UTF8String]);
-}
-
-- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
-    std::remove([[downloadAsTmpURL path] UTF8String]);
-    std::remove([[[downloadAsTmpURL URLByDeletingLastPathComponent] path] UTF8String]);
-}
-
-- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
-    scrollView.pinchGestureRecognizer.enabled = NO;
-}
-
+/*
 - (void)fontPickerViewControllerDidPickFont:(UIFontPickerViewController *)viewController {
     // Partial fix #5885 Close the font picker when a font is tapped
     // This matches the behavior of Apple apps such as Pages and Mail.
@@ -816,6 +697,7 @@ static IMP standardImpOfInputAccessoryView = nil;
          ];
     }
 }
+ */
 
 - (void)bye {
     // Close one end of the socket pair, that will wake up the forwarding thread above
@@ -850,10 +732,12 @@ static IMP standardImpOfInputAccessoryView = nil;
     // Use a UIDocumentPickerViewController to ask the user where to store
     // the exported document and, when the picker is dismissed, have the
     // picker delete the original file.
+    /*
     UIDocumentPickerViewController *picker =
         [[UIDocumentPickerViewController alloc] initForExportingURLs:[NSArray arrayWithObject:fileURL] asCopy:YES];
     picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
+     */
 }
 
 @end

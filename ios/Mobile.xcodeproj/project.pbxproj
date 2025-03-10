@@ -12,6 +12,12 @@
 		3F3A77D22C59B04000947249 /* global.js in Resources */ = {isa = PBXBuildFile; fileRef = 3F3A77D12C59B04000947249 /* global.js */; };
 		3F3B54DD2A3928D100063C01 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F3B54DB2A39288500063C01 /* HttpRequest.cpp */; };
 		3F3B54E02A392CCB00063C01 /* NetUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F3B54DE2A392C9C00063C01 /* NetUtil.cpp */; };
+		6B44C11E2D29EC2B002872A5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B44C11D2D29EC2B002872A5 /* SystemConfiguration.framework */; };
+		6B44C1202D2AB335002872A5 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B44C11F2D2AB335002872A5 /* Carbon.framework */; };
+		6B44C1222D2AB339002872A5 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B44C1212D2AB339002872A5 /* Quartz.framework */; };
+		6B44C1242D2AB33D002872A5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B44C1232D2AB33D002872A5 /* QuartzCore.framework */; };
+		6B44C1262D2AB440002872A5 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B44C1252D2AB440002872A5 /* IOKit.framework */; };
+		6B44C1742D2EB1F3002872A5 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B44C1732D2EB1DA002872A5 /* MainViewController.mm */; };
 		A5C2FA5A2AC1BB3900265946 /* Simd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A5C2FA592AC1BB3800265946 /* Simd.cpp */; };
 		A5C2FA5D2AC1BEC500265946 /* DeltaSimd.c in Sources */ = {isa = PBXBuildFile; fileRef = A5C2FA5B2AC1BEC500265946 /* DeltaSimd.c */; };
 		BE00F8A021396585001CE2D4 /* cool.html in Resources */ = {isa = PBXBuildFile; fileRef = BE00F89621396585001CE2D4 /* cool.html */; };
@@ -48,16 +54,12 @@
 		BE7228E22417BC9F000ADABD /* StringVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE7228E02417BC9F000ADABD /* StringVector.cpp */; };
 		BE7D6A6B23FAA8B500C2E605 /* coolkitconfig.xcu in Resources */ = {isa = PBXBuildFile; fileRef = BE7D6A6A23FAA8B500C2E605 /* coolkitconfig.xcu */; };
 		BE80E43221AD92F700859C97 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = BE80E43121AD92F600859C97 /* Fonts */; };
-		BE80E45821B68F5700859C97 /* TemplateCollectionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE80E45721B68F5700859C97 /* TemplateCollectionViewController.mm */; };
-		BE80E45E21B6CEF200859C97 /* TemplateSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE80E45D21B6CEF200859C97 /* TemplateSectionHeaderView.m */; };
 		BE80E46821B7066D00859C97 /* Templates in Resources */ = {isa = PBXBuildFile; fileRef = BE80E46721B7066C00859C97 /* Templates */; };
 		BE8D772C2136762500AC58EA /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE8D772B2136762500AC58EA /* AppDelegate.mm */; };
-		BE8D772F2136762500AC58EA /* DocumentBrowserViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE8D772E2136762500AC58EA /* DocumentBrowserViewController.mm */; };
 		BE8D77322136762500AC58EA /* DocumentViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE8D77312136762500AC58EA /* DocumentViewController.mm */; };
 		BE8D77352136762500AC58EA /* CODocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = BE8D77342136762500AC58EA /* CODocument.mm */; };
 		BE8D77382136762500AC58EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE8D77362136762500AC58EA /* Main.storyboard */; };
 		BE8D773A2136762600AC58EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE8D77392136762600AC58EA /* Assets.xcassets */; };
-		BE8D773D2136762600AC58EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE8D773B2136762600AC58EA /* LaunchScreen.storyboard */; };
 		BE8D77402136762600AC58EA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8D773F2136762600AC58EA /* main.m */; };
 		BE8D85CA214055F3009F1860 /* offapi.rdb in Resources */ = {isa = PBXBuildFile; fileRef = BE8D85BC214055F2009F1860 /* offapi.rdb */; };
 		BE8D85CB214055F3009F1860 /* share in Resources */ = {isa = PBXBuildFile; fileRef = BE8D85BD214055F2009F1860 /* share */; };
@@ -84,7 +86,6 @@
 		BECD984024336DD400016117 /* device-mobile.css in Resources */ = {isa = PBXBuildFile; fileRef = BECD983E24336DD400016117 /* device-mobile.css */; };
 		BECD984124336DD400016117 /* device-tablet.css in Resources */ = {isa = PBXBuildFile; fileRef = BECD983F24336DD400016117 /* device-tablet.css */; };
 		BEDCC84E2452F82800FB02BD /* MobileApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BEDCC84C2452F82800FB02BD /* MobileApp.cpp */; };
-		BEDCC8992456FFAD00FB02BD /* SceneDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = BEDCC8982456FFAC00FB02BD /* SceneDelegate.mm */; };
 		BEFB1EE121C29CC70081D757 /* L10n.mm in Sources */ = {isa = PBXBuildFile; fileRef = BEFB1EE021C29CC70081D757 /* L10n.mm */; };
 		D49B580F2D1077F700E0E607 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49B580E2D1077F700E0E607 /* UniformTypeIdentifiers.framework */; };
 /* End PBXBuildFile section */
@@ -97,6 +98,13 @@
 		3F3B54DC2A39288500063C01 /* HttpRequest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HttpRequest.hpp; sourceTree = "<group>"; };
 		3F3B54DE2A392C9C00063C01 /* NetUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetUtil.cpp; sourceTree = "<group>"; };
 		3F3B54DF2A392C9C00063C01 /* NetUtil.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NetUtil.hpp; sourceTree = "<group>"; };
+		6B44C11D2D29EC2B002872A5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		6B44C11F2D2AB335002872A5 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		6B44C1212D2AB339002872A5 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		6B44C1232D2AB33D002872A5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		6B44C1252D2AB440002872A5 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		6B44C1732D2EB1DA002872A5 /* MainViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
+		6B9423FF2D1D609A00DCB147 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		92414564BE942221FB823CF9 /* AsyncDNS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AsyncDNS.hpp; sourceTree = "<group>"; };
 		A5C2FA582AC1BB3800265946 /* Simd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Simd.hpp; sourceTree = "<group>"; };
 		A5C2FA592AC1BB3800265946 /* Simd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simd.cpp; sourceTree = "<group>"; };
@@ -786,10 +794,6 @@
 		BE80E45321B56E5000859C97 /* init.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = init.cxx; path = "../lobuilddir-symlink/desktop/source/lib/init.cxx"; sourceTree = "<group>"; };
 		BE80E45421B56E5000859C97 /* lokclipboard.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = lokclipboard.cxx; path = "../lobuilddir-symlink/desktop/source/lib/lokclipboard.cxx"; sourceTree = "<group>"; };
 		BE80E45521B56E5000859C97 /* lokinteractionhandler.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = lokinteractionhandler.cxx; path = "../lobuilddir-symlink/desktop/source/lib/lokinteractionhandler.cxx"; sourceTree = "<group>"; };
-		BE80E45621B68F5000859C97 /* TemplateCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateCollectionViewController.h; sourceTree = "<group>"; };
-		BE80E45721B68F5700859C97 /* TemplateCollectionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TemplateCollectionViewController.mm; sourceTree = "<group>"; };
-		BE80E45C21B6CEF100859C97 /* TemplateSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateSectionHeaderView.h; sourceTree = "<group>"; };
-		BE80E45D21B6CEF200859C97 /* TemplateSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateSectionHeaderView.m; sourceTree = "<group>"; };
 		BE80E46721B7066C00859C97 /* Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Templates; sourceTree = "<group>"; };
 		BE8C0372223FC4EB0048B7EA /* stringio.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = stringio.cxx; path = "../lobuilddir-symlink/svl/source/items/stringio.cxx"; sourceTree = "<group>"; };
 		BE8C0373223FC4EB0048B7EA /* itemprop.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = itemprop.cxx; path = "../lobuilddir-symlink/svl/source/items/itemprop.cxx"; sourceTree = "<group>"; };
@@ -871,15 +875,12 @@
 		BE8D77272136762500AC58EA /* Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE8D772A2136762500AC58EA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		BE8D772B2136762500AC58EA /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
-		BE8D772D2136762500AC58EA /* DocumentBrowserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocumentBrowserViewController.h; sourceTree = "<group>"; };
-		BE8D772E2136762500AC58EA /* DocumentBrowserViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DocumentBrowserViewController.mm; sourceTree = "<group>"; };
 		BE8D77302136762500AC58EA /* DocumentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocumentViewController.h; sourceTree = "<group>"; };
 		BE8D77312136762500AC58EA /* DocumentViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DocumentViewController.mm; sourceTree = "<group>"; };
 		BE8D77332136762500AC58EA /* CODocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CODocument.h; sourceTree = "<group>"; };
 		BE8D77342136762500AC58EA /* CODocument.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objcpp; path = CODocument.mm; sourceTree = "<group>"; };
 		BE8D77372136762500AC58EA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BE8D77392136762600AC58EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		BE8D773C2136762600AC58EA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE8D773E2136762600AC58EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE8D773F2136762600AC58EA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BE8D85BC214055F2009F1860 /* offapi.rdb */ = {isa = PBXFileReference; lastKnownFileType = file; name = offapi.rdb; path = "../../../lobuilddir-symlink/workdir/CustomTarget/ios/resources/offapi.rdb"; sourceTree = "<group>"; };
@@ -1292,8 +1293,6 @@
 		BECD983F24336DD400016117 /* device-tablet.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = "device-tablet.css"; path = "../../../browser/dist/device-tablet.css"; sourceTree = "<group>"; };
 		BEDCC84C2452F82800FB02BD /* MobileApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MobileApp.cpp; sourceTree = "<group>"; };
 		BEDCC84D2452F82800FB02BD /* MobileApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MobileApp.hpp; sourceTree = "<group>"; };
-		BEDCC8972456FFAC00FB02BD /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		BEDCC8982456FFAC00FB02BD /* SceneDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneDelegate.mm; sourceTree = "<group>"; };
 		BEDCC943246175E100FB02BD /* sessionlistener.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sessionlistener.cxx; path = "../lobuilddir-symlink/framework/source/services/sessionlistener.cxx"; sourceTree = "<group>"; };
 		BEDCC944246175E100FB02BD /* substitutepathvars.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = substitutepathvars.cxx; path = "../lobuilddir-symlink/framework/source/services/substitutepathvars.cxx"; sourceTree = "<group>"; };
 		BEDCC945246175E100FB02BD /* pathsettings.cxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = pathsettings.cxx; path = "../lobuilddir-symlink/framework/source/services/pathsettings.cxx"; sourceTree = "<group>"; };
@@ -1480,10 +1479,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B44C1242D2AB33D002872A5 /* QuartzCore.framework in Frameworks */,
 				D49B580F2D1077F700E0E607 /* UniformTypeIdentifiers.framework in Frameworks */,
+				6B44C1202D2AB335002872A5 /* Carbon.framework in Frameworks */,
+				6B44C11E2D29EC2B002872A5 /* SystemConfiguration.framework in Frameworks */,
+				6B44C1262D2AB440002872A5 /* IOKit.framework in Frameworks */,
 				BE512CBA2518DE6E00921C15 /* libsqlite3.tbd in Frameworks */,
 				BE6362C22153B5B500F4237E /* CoreServices.framework in Frameworks */,
 				BEA2835A21470A1C00848631 /* WebKit.framework in Frameworks */,
+				6B44C1222D2AB339002872A5 /* Quartz.framework in Frameworks */,
 				BE00F8B7213ED573001CE2D4 /* libz.tbd in Frameworks */,
 				BE00F8B5213ED543001CE2D4 /* libiconv.tbd in Frameworks */,
 			);
@@ -1527,6 +1531,11 @@
 		BE00F8B3213ED542001CE2D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B44C1252D2AB440002872A5 /* IOKit.framework */,
+				6B44C1232D2AB33D002872A5 /* QuartzCore.framework */,
+				6B44C1212D2AB339002872A5 /* Quartz.framework */,
+				6B44C11F2D2AB335002872A5 /* Carbon.framework */,
+				6B44C11D2D29EC2B002872A5 /* SystemConfiguration.framework */,
 				D49B580E2D1077F700E0E607 /* UniformTypeIdentifiers.framework */,
 				BE512CB92518DE6400921C15 /* libsqlite3.tbd */,
 				BE6362C12153B5B500F4237E /* CoreServices.framework */,
@@ -2636,21 +2645,14 @@
 				BE8D772B2136762500AC58EA /* AppDelegate.mm */,
 				BE8D77332136762500AC58EA /* CODocument.h */,
 				BE8D77342136762500AC58EA /* CODocument.mm */,
-				BE8D772D2136762500AC58EA /* DocumentBrowserViewController.h */,
-				BE8D772E2136762500AC58EA /* DocumentBrowserViewController.mm */,
 				BE8D77302136762500AC58EA /* DocumentViewController.h */,
 				BE8D77312136762500AC58EA /* DocumentViewController.mm */,
+				6B44C1732D2EB1DA002872A5 /* MainViewController.mm */,
+				6B9423FF2D1D609A00DCB147 /* MainViewController.h */,
 				BEFB1EDF21C29CC70081D757 /* L10n.h */,
 				BEFB1EE021C29CC70081D757 /* L10n.mm */,
-				BEDCC8972456FFAC00FB02BD /* SceneDelegate.h */,
-				BEDCC8982456FFAC00FB02BD /* SceneDelegate.mm */,
-				BE80E45C21B6CEF100859C97 /* TemplateSectionHeaderView.h */,
-				BE80E45D21B6CEF200859C97 /* TemplateSectionHeaderView.m */,
-				BE80E45621B68F5000859C97 /* TemplateCollectionViewController.h */,
-				BE80E45721B68F5700859C97 /* TemplateCollectionViewController.mm */,
 				BE8D77362136762500AC58EA /* Main.storyboard */,
 				BE8D77392136762600AC58EA /* Assets.xcassets */,
-				BE8D773B2136762600AC58EA /* LaunchScreen.storyboard */,
 				BE8D773E2136762600AC58EA /* Info.plist */,
 				BE8D773F2136762600AC58EA /* main.m */,
 			);
@@ -3615,7 +3617,6 @@
 				BE5EB5DC2140480B00E0826C /* ICU.dat in Resources */,
 				BE8D85CE214055F3009F1860 /* oovbaapi.rdb in Resources */,
 				BE00F8A721396585001CE2D4 /* cool-help.html in Resources */,
-				BE8D773D2136762600AC58EA /* LaunchScreen.storyboard in Resources */,
 				BE00F8A121396585001CE2D4 /* bundle.css in Resources */,
 				BE7D6A6B23FAA8B500C2E605 /* coolkitconfig.xcu in Resources */,
 				BE8D85CF214055F3009F1860 /* udkapi.rdb in Resources */,
@@ -3668,12 +3669,10 @@
 				BE5EB5C4213FE29900E0826C /* Util.cpp in Sources */,
 				BE5EB5C4214FE29900E0826C /* Uri.cpp in Sources */,
 				BEA283582146945500848631 /* ChildSession.cpp in Sources */,
-				BE80E45E21B6CEF200859C97 /* TemplateSectionHeaderView.m in Sources */,
 				BE5EB5C3213FE29900E0826C /* Session.cpp in Sources */,
 				BE5EB5D22140039100E0826C /* COOLWSD.cpp in Sources */,
 				BE5EB5D22140039100E0826D /* ClientRequestDispatcher.cpp in Sources */,
 				BEFB1EE121C29CC70081D757 /* L10n.mm in Sources */,
-				BEDCC8992456FFAD00FB02BD /* SceneDelegate.mm in Sources */,
 				BE5EB5C6213FE29900E0826C /* SigUtil.cpp in Sources */,
 				3F3B54E02A392CCB00063C01 /* NetUtil.cpp in Sources */,
 				BE5EB5C1213FE29900E0826C /* Log.cpp in Sources */,
@@ -3691,11 +3690,9 @@
 				BEABFC6824AC94C3004DE339 /* Authorization.cpp in Sources */,
 				A5C2FA5D2AC1BEC500265946 /* DeltaSimd.c in Sources */,
 				BEA28360214ACA8500848631 /* FakeSocket.cpp in Sources */,
-				BE80E45821B68F5700859C97 /* TemplateCollectionViewController.mm in Sources */,
 				BE8D77352136762500AC58EA /* CODocument.mm in Sources */,
 				1FCFA28A2B2AF13F007EE2DF /* coolwsd-fork.cpp in Sources */,
 				BE5EB5C7213FE29900E0826C /* Protocol.cpp in Sources */,
-				BE8D772F2136762500AC58EA /* DocumentBrowserViewController.mm in Sources */,
 				BE9ADE3F265D046600BC034A /* TraceEvent.cpp in Sources */,
 				BE5EB5D0213FE2D000E0826C /* TileCache.cpp in Sources */,
 				1F957DC22BA8229A006C9E78 /* Util-mobile.cpp in Sources */,
@@ -3710,6 +3707,7 @@
 				BEA2835621467F0D00848631 /* KitWebSocket.cpp in Sources */,
 				BE8D77322136762500AC58EA /* DocumentViewController.mm in Sources */,
 				BE8D772C2136762500AC58EA /* AppDelegate.mm in Sources */,
+				6B44C1742D2EB1F3002872A5 /* MainViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3722,14 +3720,6 @@
 				BE8D77372136762500AC58EA /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		BE8D773B2136762600AC58EA /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				BE8D773C2136762600AC58EA /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -3768,7 +3758,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3791,7 +3780,8 @@
 				LOSRCDIR = "$(SOURCE_ROOT)/../lobuilddir-symlink";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
 		};
@@ -3828,7 +3818,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -3844,7 +3833,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.3;
 				LOSRCDIR = "$(SOURCE_ROOT)/../lobuilddir-symlink";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -3856,7 +3846,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Mobile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J4FQ687VJK;
+				DEVELOPMENT_TEAM = NXAGVF2MTG;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"IOS=IOS",
@@ -3890,6 +3880,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-x",
 					"objective-c++",
@@ -3909,8 +3900,9 @@
 					"$(SOURCE_ROOT)/../zstdlib-symlink",
 					"-lzstd",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.collabora.office.Mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andreichev.office.Mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -3922,7 +3914,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Mobile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J4FQ687VJK;
+				DEVELOPMENT_TEAM = NXAGVF2MTG;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"IOS=IOS",
@@ -3955,6 +3947,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-x",
 					"objective-c++",
@@ -3974,8 +3967,9 @@
 					"$(SOURCE_ROOT)/../zstdlib-symlink",
 					"-lzstd",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.collabora.office.Mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andreichev.office.Mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -9,12 +9,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#import <UIKit/UIKit.h>
+#import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 
 #import "CODocument.h"
 
-@interface DocumentViewController : UIViewController
+@interface DocumentViewController : NSViewController
 
 @property (strong) CODocument *document;
 @property (strong) WKWebView *webView;

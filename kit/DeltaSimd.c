@@ -16,7 +16,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <endian.h>
+#include <machine/endian.h>
 
 #include "DeltaSimd.h"
 

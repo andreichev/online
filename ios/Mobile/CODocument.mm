@@ -46,8 +46,8 @@ static inline bool isMessageOfType(const char *message, const char *type, size_t
 
 @implementation CODocument
 
-- (id)contentsForType:(NSString*)typeName error:(NSError **)errorPtr {
-    return [NSData dataWithContentsOfFile:[copyFileURL path] options:0 error:errorPtr];
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError *__autoreleasing  _Nullable *)outError {
+    return [NSData dataWithContentsOfFile:[copyFileURL path] options:0 error:outError];
 }
 
 // We keep a running count of opening documents here. This is not necessarily in sync with the
@@ -56,8 +56,7 @@ static inline bool isMessageOfType(const char *message, const char *type, size_t
 
 static std::atomic<unsigned> appDocIdCounter(1);
 
-- (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)errorPtr {
-
+- (BOOL)loadInBrowser: (NSError *)error {
     // If this method is called a second time on the same CODocument object, just ignore it. This
     // seems to happen occasionally when the device is awakened after sleep. See tdf#122543.
     if (fakeClientFd >= 0)
@@ -73,22 +72,24 @@ static std::atomic<unsigned> appDocIdCounter(1);
     }
 
     copyFileURL = [copyFileDirectory URLByAppendingPathComponent:[[[self fileURL] path] lastPathComponent]];
+    
+    NSLog(@"Copy File URL: %@", copyFileURL.absoluteString);
 
-    NSError *error;
     [[NSFileManager defaultManager] removeItemAtURL:copyFileURL error:nil];
     [[NSFileManager defaultManager] copyItemAtURL:[self fileURL] toURL:copyFileURL error:&error];
     if (error != nil)
         return NO;
 
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"cool" withExtension:@"html"];
-    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+    NSURL *coolUrl = [[NSBundle mainBundle] URLForResource:@"cool" withExtension:@"html"];
+    NSURLComponents *components = [NSURLComponents componentsWithURL:coolUrl resolvingAgainstBaseURL:NO];
     DocumentData::allocate(appDocId).coDocument = self;
     components.queryItems = @[ [NSURLQueryItem queryItemWithName:@"file_path" value:[copyFileURL absoluteString]],
                                [NSURLQueryItem queryItemWithName:@"closebutton" value:@"1"],
                                [NSURLQueryItem queryItemWithName:@"permission" value:(readOnly ? @"readonly" : @"edit")],
                                [NSURLQueryItem queryItemWithName:@"lang" value:app_locale],
                                [NSURLQueryItem queryItemWithName:@"appdocid" value:[NSString stringWithFormat:@"%u", appDocId]],
-                               [NSURLQueryItem queryItemWithName:@"userinterfacemode" value:([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? @"notebookbar" : @"classic")],
+                               // [NSURLQueryItem queryItemWithName:@"userinterfacemode" value:([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? @"notebookbar" : @"classic")],
+                               [NSURLQueryItem queryItemWithName:@"userinterfacemode" value:@"classic"],
                                // Related to issue #5841: the iOS app sets the
                                // base text direction via the "dir" parameter
                                [NSURLQueryItem queryItemWithName:@"dir" value:app_text_direction],
@@ -177,6 +178,12 @@ static std::atomic<unsigned> appDocIdCounter(1);
                  }
              ];
         });
+}
+
+- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError *__autoreleasing  _Nullable *)outError {
+    NSString* str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"READ FROM DATA: %@", str);
+    return YES;
 }
 
 @end

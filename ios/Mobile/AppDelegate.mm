@@ -23,7 +23,6 @@
 
 #import "ios.h"
 #import "AppDelegate.h"
-#import "DocumentBrowserViewController.h"
 #import "CODocument.h"
 #import "DocumentViewController.h"
 
@@ -41,17 +40,18 @@ NSString *app_text_direction;
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    _window = [[[NSApplication sharedApplication] windows] firstObject];
     auto trace = std::getenv("COOL_LOGLEVEL");
     if (!trace)
         trace = strdup("warning");
 
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-        setupKitEnvironment("notebookbar");
-    else
-        setupKitEnvironment("");
+    // if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    // setupKitEnvironment("notebookbar");
+    // else
+    setupKitEnvironment("");
 
-    Log::initialize("Mobile", trace, false, false, {}, false, {});
+    Log::initialize("IRM COL", trace, false, false, {}, false, {});
     Util::setThreadName("main");
 
     // Clear the cache directory if it is for another build of the app
@@ -154,7 +154,7 @@ NSString *app_text_direction;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                    ^{
                        char *argv[2];
-                       argv[0] = strdup([[NSBundle mainBundle].executablePath UTF8String]);
+                       argv[0] = strdup([[NSBundle bundleForClass:[self class]].executablePath UTF8String]);
                        argv[1] = nullptr;
                        Util::setThreadName("app");
                        auto coolwsd = new COOLWSD();
@@ -165,26 +165,9 @@ NSString *app_text_direction;
                        NSLog(@"lolwsd->run() unexpectedly returned");
                        std::abort();
                    });
-    return YES;
 }
 
-- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options API_AVAILABLE(ios(13.0)) {
-    return [UISceneConfiguration configurationWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
     // tdf#126974 We don't want any global object destructors to be called, the code
     // is not prepared for that.
     std::_Exit(1);
@@ -192,24 +175,23 @@ NSString *app_text_direction;
 
 // This method is called when you use the "Share > Open in Collabora Office" functionality in the
 // Files app. Possibly also in other use cases.
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)inputURL options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
-    // Ensure the URL is a file URL
-    if (!inputURL.isFileURL) {
-        return NO;
+
+static DocumentViewController *newDocumentViewControllerFor(NSURL *url, bool readOnly) {
+    NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
+    DocumentViewController *documentViewController = [storyBoard instantiateControllerWithIdentifier:@"DocumentViewController"];
+    documentViewController.document = [[CODocument alloc] initWithContentsOfURL:url ofType:@"" error:nil];
+    documentViewController.document->fakeClientFd = -1;
+    documentViewController.document->readOnly = readOnly;
+    documentViewController.document.viewController = documentViewController;
+    
+    return documentViewController;
+}
+
+- (void)application:(NSApplication *)application openURLs:(NSArray<NSURL *> *)urls {
+    for(NSURL* url in urls) {
+        DocumentViewController *documentViewController = newDocumentViewControllerFor(url, false);
+        self.window.contentViewController = documentViewController;
     }
-
-    // Reveal / import the document at the URL
-    DocumentBrowserViewController *documentBrowserViewController = (DocumentBrowserViewController *)self.window.rootViewController;
-    [documentBrowserViewController revealDocumentAtURL:inputURL importIfNeeded:YES completion:^(NSURL * _Nullable revealedDocumentURL, NSError * _Nullable error) {
-        if (error) {
-            LOG_ERR("Failed to reveal the document at URL " << [[inputURL description] UTF8String] << " with error: " << [[error description] UTF8String]);
-            return;
-        }
-
-        // Present the Document View Controller for the revealed URL
-        [documentBrowserViewController presentDocumentAtURL:revealedDocumentURL];
-    }];
-    return YES;
 }
 
 @end

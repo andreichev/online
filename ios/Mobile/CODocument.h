@@ -10,15 +10,14 @@
  */
 
 #import <string>
-
-#import <UIKit/UIKit.h>
+#import <Cocoa/Cocoa.h>
 
 #define LOK_USE_UNSTABLE_API
 #import <LibreOfficeKit/LibreOfficeKit.h>
 
 @class DocumentViewController;
 
-@interface CODocument : UIDocument {
+@interface CODocument : NSDocument {
 @public
     int fakeClientFd;
     NSURL *copyFileURL;
@@ -29,6 +28,8 @@
 @property (weak) DocumentViewController *viewController;
 
 - (void)send2JS:(const char*)buffer length:(int)length;
+
+- (BOOL)loadInBrowser: (NSError *)error;
 
 @end
 
