@@ -103,7 +103,15 @@ static std::atomic<unsigned> appDocIdCounter(1);
 
 - (void)send2JS:(const char *)buffer length:(int)length {
     LOG_DBG("To JS: " << COOLProtocol::getAbbreviatedMessage(buffer, length).c_str());
-
+    // if ([@(buffer) containsString: @"uno:ModifiedStatus=true"]) {
+    if (strstr(buffer, "uno:ModifiedStatus=true") != nil) {
+        NSLog(@"MODIFIED!");
+    }
+    
+    if (strstr(buffer, "uno:ModifiedStatus=false") != nil) {
+        NSLog(@"NOT MODIFIED!");
+    }
+    
     bool binaryMessage = (isMessageOfType(buffer, "tile:", length) ||
                           isMessageOfType(buffer, "tilecombine:", length) ||
                           isMessageOfType(buffer, "delta:", length) ||
